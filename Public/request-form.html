@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ITOD Services - Request Form</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body { 
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .navbar { 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      padding: 1rem 0;
+    }
+    
+    .navbar-brand { 
+      color: white !important; 
+      font-weight: 700; 
+      font-size: 1.6rem;
+      letter-spacing: 1px;
+    }
+    
+    .btn-back {
+      background: rgba(255,255,255,0.2);
+      border: 2px solid rgba(255,255,255,0.3);
+      color: white;
+      font-weight: 500;
+      padding: 8px 20px;
+      border-radius: 8px;
+      transition: all .3s ease;
+      text-decoration: none;
+    }
+    
+    .btn-back:hover {
+      background: rgba(255,255,255,0.3);
+      border-color: rgba(255,255,255,0.5);
+      color: white;
+      transform: translateX(-4px);
+    }
+    
+    .service-header {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      margin: 2rem 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border-left: 6px solid #667eea;
+    }
+    
+    .service-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+    
+    .service-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #2d3748;
+      margin-bottom: 8px;
+    }
+    
+    .service-desc {
+      color: #718096;
+      font-size: 1rem;
+    }
+    
+    .card {
+      border-radius: 16px;
+      border: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    
+    .card-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 16px 16px 0 0 !important;
+      padding: 20px 24px;
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+    
+    .form-label {
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 8px;
+    }
+    
+    .form-control, .form-select {
+      border-radius: 8px;
+      border: 2px solid #e2e8f0;
+      padding: 10px 14px;
+      transition: all .3s ease;
+    }
+    
+    .form-control:focus, .form-select:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 0.2rem rgba(102,126,234,0.25);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      padding: 12px 32px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(102,126,234,0.4);
+    }
+    
+    .btn-primary:disabled {
+      background: #9ca3af;
+      transform: none;
+      cursor: not-allowed;
+    }
+    
+    .alert-info {
+      background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+      border: 2px solid #93c5fd;
+      border-radius: 12px;
+      color: #1e40af;
+    }
+
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .loading-overlay.active {
+      display: flex;
+    }
+
+    .loading-content {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      text-align: center;
+      max-width: 400px;
+    }
+
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 6px solid #f3f4f6;
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .success-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+    }
+
+    .success-modal.active {
+      display: flex;
+    }
+
+    .success-content {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .success-icon {
+      font-size: 72px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .assignment-info {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border: 2px solid #93c5fd;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .metric-row:last-child {
+      border-bottom: none;
+    }
+
+    .metric-label {
+      font-weight: 600;
+      color: #6b7280;
+    }
+
+    .metric-value {
+      color: #1f2937;
+      font-weight: 600;
+    }
+
+    .risk-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .risk-low { background: #d1fae5; color: #065f46; }
+    .risk-medium { background: #fef3c7; color: #92400e; }
+    .risk-high { background: #fee2e2; color: #991b1b; }
+  </style>
+</head>
+<body>
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <h4 style="color: #2d3748; margin-bottom: 10px;">🤖 AI Processing...</h4>
+      <p style="color: #6b7280;">Analyzing your request and finding the best engineer</p>
+    </div>
+  </div>
+
+  <div id="successModal" class="success-modal">
+    <div class="success-content">
+      <div class="success-icon">✅</div>
+      <h3 style="text-align: center; color: #2d3748; margin-bottom: 10px;">Request Submitted Successfully!</h3>
+      <p style="text-align: center; color: #6b7280; margin-bottom: 30px;">Your request has been automatically assigned by our AI system</p>
+      
+      <div id="assignmentDetails"></div>
+
+      <div style="text-align: center; margin-top: 30px;">
+        <button onclick="closeSuccessModal()" class="btn btn-primary">Back to Catalog</button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-light shadow-sm">
+    <div class="container-fluid">
+      <span class="navbar-brand mb-0 h1">ITOD SERVICES</span>
+      <a href="index.html" class="btn-back">← Kembali ke Catalog</a>
+    </div>
+  </nav>
+
+  <div class="container py-4">
+    <div class="service-header text-center">
+      <div class="service-icon" id="serviceIcon">📋</div>
+      <h1 class="service-title" id="serviceTitle">Loading...</h1>
+      <p class="service-desc" id="serviceDesc"></p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        Form Permintaan Layanan
+      </div>
+      <div class="card-body p-4">
+        <form id="requestForm">
+          <input type="hidden" id="serviceId" />
+          
+          <div class="row g-4">
+            <div class="col-md-6">
+              <label class="form-label">Nama Requestor <span class="text-danger">*</span></label>
+              <input id="requestor" class="form-control" required placeholder="Masukkan nama lengkap" />
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">NIP <span class="text-danger">*</span></label>
+              <input id="nip" class="form-control" required placeholder="Masukkan NIP" />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Kantor / Cabang <span class="text-danger">*</span></label>
+              <select id="branch" class="form-select" required>
+                <option value="">-- Pilih Kantor/Cabang --</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Unit Kerja</label>
+              <input id="unit" class="form-control" placeholder="Masukkan unit kerja" />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Tingkat Urgensi <span class="text-danger">*</span></label>
+              <select id="urgency" class="form-select" required>
+                <option value="low">Low - Tidak mendesak</option>
+                <option value="medium" selected>Medium - Perlu ditangani segera</option>
+                <option value="high">High - Sangat mendesak</option>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Deskripsi Kebutuhan <span class="text-danger">*</span></label>
+              <textarea id="description" rows="5" class="form-control" placeholder="Jelaskan detail kebutuhan yang diinginkan minimal 3 kata" required></textarea>
+            </div>
+
+            <div class="col-12">
+              <div class="alert alert-info mb-0">
+                <strong>💡 Tips:</strong> Pastikan semua field yang ditandai dengan <span class="text-danger">*</span> sudah terisi dengan benar sebelum mengirim permintaan. Sistem AI kami akan secara otomatis menentukan engineer terbaik berdasarkan kompleksitas dan keahlian.
+              </div>
+            </div>
+
+            <div class="col-12 d-flex justify-content-between align-items-center">
+              <a href="index.html" class="btn btn-outline-secondary">← Kembali</a>
+              <button type="submit" id="submitBtn" class="btn btn-primary">🤖 Kirim & Assign Otomatis →</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const API = {
+      submitRequest: '/api/submit-request'
+    };
+
+    const BRANCHES = [
+      "Kantor Pusat",
+      "KC Karawaci",
+      "KC BSD / KC Bumi Serpong Damai",
+      "KC Tangerang",
+      "KCP Ciledug",
+      "KCP Cimone",
+      "KCP Cipondoh",
+      "KCP Duta Garden – Daan Mogot",
+      "KC Ciputat",
+      "KCP Bintaro (BTC / Bintaro)",
+      "KC Bekasi",
+      "KC Harapan Indah – Bekasi",
+      "KCP Bantar Gebang (Bekasi)",
+      "KC Jakarta Kebon Jeruk",
+      "KCP Daan Mogot Baru (Jakarta Barat)",
+      "KCP Kemanggisan (Jakarta Barat)",
+      "KC Jakarta Melawai (Jakarta Selatan)",
+      "KCP Cilandak (Jakarta Selatan)",
+      "KCP Fatmawati (Jakarta Selatan)",
+      "KCP Kebayoran Lama (Jakarta Selatan)",
+      "KCP Mampang (Jakarta Selatan)"
+    ];
+
+    function loadServiceData() {
+      const serviceData = localStorage.getItem('selectedService');
+      if (!serviceData) {
+        alert('⚠️ Data service tidak ditemukan. Kembali ke catalog.');
+        window.location.href = 'index.html';
+        return null;
+      }
+      return JSON.parse(serviceData);
+    }
+
+    function renderBranches() {
+      const branchSelect = document.getElementById('branch');
+      BRANCHES.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b;
+        opt.textContent = b;
+        branchSelect.appendChild(opt);
+      });
+    }
+
+    function initializePage() {
+      const service = loadServiceData();
+      if (!service) return;
+
+      document.getElementById('serviceIcon').textContent = service.icon;
+      document.getElementById('serviceTitle').textContent = service.title;
+      document.getElementById('serviceDesc').textContent = service.desc;
+      document.getElementById('serviceId').value = service.id;
+      
+      renderBranches();
+    }
+
+    function showLoading() {
+      document.getElementById('loadingOverlay').classList.add('active');
+      document.getElementById('submitBtn').disabled = true;
+    }
+
+    function hideLoading() {
+      document.getElementById('loadingOverlay').classList.remove('active');
+      document.getElementById('submitBtn').disabled = false;
+    }
+
+    function showSuccessModal(data) {
+      const modal = document.getElementById('successModal');
+      const detailsDiv = document.getElementById('assignmentDetails');
+      
+      let html = `
+        <div style="background: #f9fafb; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+          <div class="metric-row">
+            <span class="metric-label">Request ID:</span>
+            <span class="metric-value">${data.id}</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Status:</span>
+            <span class="metric-value">${data.data && data.data.status === 'assigned' ? '✅ Assigned' : '⏳ Processing'}</span>
+          </div>
+        </div>
+      `;
+
+      if (data.data && data.data.assignedTo) {
+        const ai = data.data.aiAnalysis;
+        const riskLevel = ai && ai.cri ? ai.cri.risk_level : 'MEDIUM';
+        const riskClass = `risk-${riskLevel.toLowerCase()}`;
+        
+        html += `
+          <div class="assignment-info">
+            <h5 style="color: #1e40af; margin-bottom: 15px;">🤖 AI Assignment Details</h5>
+            
+            <div class="metric-row">
+              <span class="metric-label">Assigned Engineer:</span>
+              <span class="metric-value" style="color: #667eea; font-size: 1.1em;">${data.data.assignedTo}</span>
+            </div>
+            
+            ${ai ? `
+              <div class="metric-row">
+                <span class="metric-label">Assignment Score:</span>
+                <span class="metric-value">${(ai.assignmentScore * 100).toFixed(1)}%</span>
+              </div>
+              
+              <div class="metric-row">
+                <span class="metric-label">Risk Level:</span>
+                <span class="risk-badge ${riskClass}">${riskLevel}</span>
+              </div>
+              
+              ${ai.cri ? `
+                <div class="metric-row">
+                  <span class="metric-label">Complexity Index:</span>
+                  <span class="metric-value">${(ai.cri.cri_normalized * 100).toFixed(1)}%</span>
+                </div>
+              ` : ''}
+              
+              ${ai.tsm ? `
+                <div class="metric-row">
+                  <span class="metric-label">Skill Match:</span>
+                  <span class="metric-value">${(ai.tsm.tsm_score * 100).toFixed(1)}%</span>
+                </div>
+              ` : ''}
+              
+              ${ai.reason ? `
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #bfdbfe;">
+                  <p style="color: #1e40af; margin: 0; font-size: 0.9em;">
+                    <strong>Reason:</strong> ${ai.reason}
+                  </p>
+                </div>
+              ` : ''}
+            ` : ''}
+          </div>
+        `;
+      } else {
+        html += `
+          <div style="background: #fef3c7; padding: 20px; border-radius: 12px; border: 2px solid #fbbf24;">
+            <p style="color: #92400e; margin: 0; text-align: center;">
+              ⚠️ Request submitted but AI assignment is pending. Please check back later or contact admin.
+            </p>
+          </div>
+        `;
+      }
+
+      detailsDiv.innerHTML = html;
+      modal.classList.add('active');
+    }
+
+    function closeSuccessModal() {
+      document.getElementById('successModal').classList.remove('active');
+      localStorage.removeItem('selectedService');
+      window.location.href = 'index.html';
+    }
+
+    document.getElementById('requestForm').addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      
+      const service = loadServiceData();
+      if (!service) return;
+
+      const payload = {
+        serviceId: document.getElementById('serviceId').value,
+        serviceTitle: service.title,
+        requestor: document.getElementById('requestor').value,
+        nip: document.getElementById('nip').value,
+        branch: document.getElementById('branch').value,
+        unit: document.getElementById('unit').value,
+        urgency: document.getElementById('urgency').value,
+        description: document.getElementById('description').value,
+        createdAt: new Date().toISOString()
+      };
+
+      showLoading();
+
+      try {
+        const resp = await fetch(API.submitRequest, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        
+        const data = await resp.json();
+        
+        hideLoading();
+        
+        if (resp.ok) {
+          console.log('✅ Request response:', data);
+          showSuccessModal(data);
+        } else {
+          alert('❌ Gagal mengirim permintaan: ' + (data.message || resp.statusText));
+        }
+      } catch (err) {
+        hideLoading();
+        console.error(err);
+        alert('⚠️ Terjadi error saat mengirim permintaan. Silakan coba lagi.');
+      }
+    });
+
+    initializePage();
+  </script>
+</body>
+</html>

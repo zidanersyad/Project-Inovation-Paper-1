@@ -1,0 +1,1502 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ITOD Services - Admin Dashboard</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body { 
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .navbar { 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      padding: 1rem 0;
+    }
+    
+    .navbar-brand { 
+      color: white !important; 
+      font-weight: 700; 
+      font-size: 1.6rem;
+      letter-spacing: 1px;
+    }
+
+    .admin-badge {
+      display: inline-block;
+      background: #ef4444;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+    
+    .btn-back {
+      background: rgba(255,255,255,0.2);
+      border: 2px solid rgba(255,255,255,0.3);
+      color: white;
+      font-weight: 500;
+      padding: 8px 20px;
+      border-radius: 8px;
+      transition: all .3s ease;
+      text-decoration: none;
+    }
+    
+    .btn-back:hover {
+      background: rgba(255,255,255,0.3);
+      border-color: rgba(255,255,255,0.5);
+      color: white;
+      transform: translateX(-4px);
+    }
+
+    .filter-card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+    }
+
+    .filter-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 8px;
+    }
+
+    .form-control, .form-select {
+      border-radius: 8px;
+      border: 2px solid #e2e8f0;
+      padding: 10px 14px;
+      transition: all .3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 0.2rem rgba(102,126,234,0.25);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(102,126,234,0.4);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border-left: 4px solid #667eea;
+    }
+
+    .stat-label {
+      color: #718096;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .stat-value {
+      color: #2d3748;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    .requests-table {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .table {
+      margin: 0;
+    }
+
+    .table thead {
+      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    }
+
+    .table thead th {
+      font-weight: 600;
+      color: #2d3748;
+      border: none;
+      padding: 16px;
+    }
+
+    .table tbody td {
+      padding: 14px 16px;
+      border: none;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: middle;
+    }
+
+    .table tbody tr:hover {
+      background: #f9fafb;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .status-processing { background: #fef3c7; color: #92400e; }
+    .status-assigned { background: #d1fae5; color: #065f46; }
+    .status-open { background: #dbeafe; color: #0c4a6e; }
+    .status-completed { background: #c7d2fe; color: #3730a3; }
+    .status-deleted { background: #fee2e2; color: #991b1b; }
+
+    .urgency-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .urgency-low { background: #e0e7ff; color: #3730a3; }
+    .urgency-medium { background: #fef3c7; color: #92400e; }
+    .urgency-high { background: #fee2e2; color: #991b1b; }
+
+    .btn-action {
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: all .2s ease;
+      margin: 2px;
+    }
+
+    .btn-view {
+      background: #dbeafe;
+      color: #0c4a6e;
+      font-weight: 600;
+    }
+
+    .btn-view:hover {
+      background: #bfdbfe;
+      transform: translateY(-2px);
+    }
+
+    .btn-complete {
+      background: #d1fae5;
+      color: #065f46;
+      font-weight: 600;
+    }
+
+    .btn-complete:hover:not(:disabled) {
+      background: #a7f3d0;
+      transform: translateY(-2px);
+    }
+
+    .btn-complete:disabled {
+      background: #e5e7eb;
+      color: #9ca3af;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .btn-delete {
+      background: #fee2e2;
+      color: #991b1b;
+      font-weight: 600;
+    }
+
+    .btn-delete:hover:not(:disabled) {
+      background: #fecaca;
+      transform: translateY(-2px);
+    }
+
+    .btn-delete:disabled {
+      background: #e5e7eb;
+      color: #9ca3af;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 60px 20px;
+      color: #718096;
+    }
+
+    .no-data-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+
+    .loading-spinner {
+      display: none;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .loading-spinner.active {
+      display: block;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f3f4f6;
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .detail-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      overflow-y: auto;
+      padding: 20px 0;
+    }
+
+    .detail-modal.active {
+      display: flex;
+    }
+
+    .detail-content {
+      background: white;
+      border-radius: 16px;
+      max-width: 900px;
+      width: 100%;
+      margin: auto;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .detail-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 24px;
+      border-radius: 16px 16px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .detail-header h3 {
+      margin: 0;
+      font-weight: 700;
+      font-size: 1.4rem;
+    }
+
+    .btn-close-modal {
+      background: rgba(255,255,255,0.2);
+      border: 2px solid rgba(255,255,255,0.3);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all .2s ease;
+      font-weight: 600;
+    }
+
+    .btn-close-modal:hover {
+      background: rgba(255,255,255,0.3);
+      border-color: rgba(255,255,255,0.5);
+    }
+
+    .detail-body {
+      padding: 24px;
+    }
+
+    .detail-section {
+      margin-bottom: 24px;
+    }
+
+    .detail-section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #2d3748;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    .detail-row {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 16px;
+      margin-bottom: 12px;
+      align-items: start;
+    }
+
+    .detail-label {
+      color: #718096;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .detail-value {
+      color: #2d3748;
+      font-weight: 500;
+    }
+
+    .edit-form {
+      background: #f9fafb;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 16px;
+    }
+
+    .edit-form-group {
+      margin-bottom: 16px;
+    }
+
+    .edit-form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .edit-form label {
+      display: block;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    .edit-form input,
+    .edit-form textarea,
+    .edit-form select {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #e2e8f0;
+      border-radius: 6px;
+      font-family: inherit;
+      transition: all .2s ease;
+    }
+
+    .edit-form input:focus,
+    .edit-form textarea:focus,
+    .edit-form select:focus {
+      border-color: #667eea;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+    }
+
+    .edit-form input[readonly],
+    .edit-form textarea[readonly] {
+      background: #e5e7eb;
+      cursor: not-allowed;
+    }
+
+    .edit-form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .btn-save {
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+
+    .btn-save:hover:not(:disabled) {
+      background: #059669;
+      transform: translateY(-2px);
+    }
+
+    .btn-save:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .btn-cancel {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+
+    .btn-cancel:hover {
+      background: #dc2626;
+      transform: translateY(-2px);
+    }
+
+    .alert {
+      border-radius: 12px;
+      border: none;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .alert-success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 2px solid #6ee7b7;
+    }
+
+    .alert-error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 2px solid #fca5a5;
+    }
+
+    .ai-analysis-box {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border: 2px solid #93c5fd;
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .ai-metric {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #bfdbfe;
+    }
+
+    .ai-metric:last-child {
+      border-bottom: none;
+    }
+
+    .ai-metric-label {
+      font-weight: 600;
+      color: #0c4a6e;
+    }
+
+    .ai-metric-value {
+      color: #1e40af;
+      font-weight: 600;
+    }
+
+    /* AI Processing Loading Overlay */
+    .ai-processing-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 20000;
+    }
+
+    .ai-processing-overlay.active {
+      display: flex;
+    }
+
+    .ai-processing-content {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      max-width: 500px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .ai-brain-animation {
+      font-size: 80px;
+      margin-bottom: 20px;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    .ai-processing-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2d3748;
+      margin-bottom: 10px;
+    }
+
+    .ai-processing-subtitle {
+      color: #718096;
+      margin-bottom: 20px;
+      font-size: 1rem;
+    }
+
+    .ai-progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 15px;
+    }
+
+    .ai-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      border-radius: 4px;
+      animation: progress 2s ease-in-out infinite;
+    }
+
+    @keyframes progress {
+      0% { width: 0%; }
+      50% { width: 70%; }
+      100% { width: 100%; }
+    }
+
+    .ai-processing-steps {
+      text-align: left;
+      margin-top: 20px;
+    }
+
+    .ai-step {
+      display: flex;
+      align-items: center;
+      padding: 8px 0;
+      color: #718096;
+      font-size: 0.9rem;
+    }
+
+    .ai-step.active {
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    .ai-step-icon {
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+
+    .assignment-toggle {
+      background: #eff6ff;
+      border: 2px solid #93c5fd;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-weight: 600;
+      color: #1e40af;
+    }
+
+    .toggle-switch {
+      width: 50px;
+      height: 26px;
+      background: #cbd5e1;
+      border-radius: 13px;
+      position: relative;
+      transition: background .3s ease;
+      cursor: pointer;
+    }
+
+    .toggle-switch.active {
+      background: #667eea;
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      top: 3px;
+      left: 3px;
+      transition: left .3s ease;
+    }
+
+    .toggle-switch.active::after {
+      left: 27px;
+    }
+
+    .manual-assignment-section {
+      display: none;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #bfdbfe;
+    }
+
+    .manual-assignment-section.active {
+      display: block;
+    }
+
+    .candidate-list {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 8px;
+    }
+
+    .candidate-item {
+      padding: 12px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all .2s ease;
+      background: white;
+    }
+
+    .candidate-item:hover {
+      border-color: #667eea;
+      background: #f0f4ff;
+    }
+
+    .candidate-item.selected {
+      border-color: #667eea;
+      background: #eff6ff;
+    }
+
+    .candidate-name {
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 4px;
+    }
+
+    .candidate-scores {
+      display: flex;
+      gap: 12px;
+      font-size: 0.85rem;
+      color: #6b7280;
+    }
+
+    .candidate-score {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+  </style>
+</head>
+<body>
+  <!-- AI Processing Overlay -->
+  <div id="aiProcessingOverlay" class="ai-processing-overlay">
+    <div class="ai-processing-content">
+      <div class="ai-brain-animation">🤖</div>
+      <h3 class="ai-processing-title">Processing</h3>
+      <p class="ai-processing-subtitle">Saving changes...</p>
+      
+      <div class="ai-progress-bar">
+        <div class="ai-progress-fill"></div>
+      </div>
+      
+      <div class="ai-processing-steps">
+        <div class="ai-step active">
+          <span class="ai-step-icon">⚙️</span>
+          <span>Validating changes...</span>
+        </div>
+        <div class="ai-step">
+          <span class="ai-step-icon">💾</span>
+          <span>Updating database...</span>
+        </div>
+        <div class="ai-step">
+          <span class="ai-step-icon">📧</span>
+          <span>Sending notifications...</span>
+        </div>
+        <div class="ai-step">
+          <span class="ai-step-icon">✅</span>
+          <span>Finalizing...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-light shadow-sm">
+    <div class="container-fluid">
+      <span class="navbar-brand mb-0 h1">
+        ITOD SERVICES
+        <span class="admin-badge">ADMIN PANEL</span>
+      </span>
+      <a href="index.html" class="btn-back">← Kembali ke Menu</a>
+    </div>
+  </nav>
+
+  <div class="container-fluid py-4">
+    <div class="stats-grid" id="statsGrid"></div>
+
+    <div class="filter-card">
+      <div class="filter-title">🔍 Filter & Pencarian</div>
+      <div class="row g-3">
+        <div class="col-md-3">
+          <label class="form-label">Cari Request ID / Nama</label>
+          <input type="text" id="searchInput" class="form-control" placeholder="Cari...">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Status</label>
+          <select id="filterStatus" class="form-select">
+            <option value="">-- Semua Status --</option>
+            <option value="open">Open</option>
+            <option value="processing">Processing</option>
+            <option value="assigned">Assigned</option>
+            <option value="completed">Completed</option>
+            <option value="deleted">Deleted</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Urgensi</label>
+          <select id="filterUrgency" class="form-select">
+            <option value="">-- Semua Urgensi --</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+          <button class="btn btn-primary w-100" id="filterBtn">
+            🔎 Filter
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="loading-spinner active" id="loadingSpinner">
+      <div class="spinner"></div>
+      <p style="color: #718096; font-weight: 500;">Memuat data requests...</p>
+    </div>
+
+    <div class="requests-table" id="requestsTableContainer" style="display: none;">
+      <table class="table" id="requestsTable">
+        <thead>
+          <tr>
+            <th>Request ID</th>
+            <th>Nama Service</th>
+            <th>Requestor</th>
+            <th>Status</th>
+            <th>Urgensi</th>
+            <th>Assigned To</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="requestsTableBody">
+        </tbody>
+      </table>
+    </div>
+
+    <div id="noDataContainer" style="display: none;">
+      <div class="no-data">
+        <div class="no-data-icon">📭</div>
+        <h5 style="color: #2d3748; font-weight: 600;">Tidak ada requests ditemukan</h5>
+        <p>Coba ubah filter atau pencarian Anda</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail-modal" id="detailModal">
+    <div class="detail-content">
+      <div class="detail-header">
+        <h3 id="modalTitle">Detail Request</h3>
+        <button class="btn-close-modal" id="closeModalBtn">✕ Close</button>
+      </div>
+      <div class="detail-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const SERVICE_CATALOG = [
+      { id: 'svc_data_laporan', title: 'Data dan Laporan ADHOQ/OutQ', desc: 'Permintaan data dan laporan ADHOQ/OutQ', icon: '📊' },
+      { id: 'svc_email', title: 'Email Service (Zimbra)', desc: 'Buat email, reset password Zimbra', icon: '📧' },
+      { id: 'svc_eod', title: 'EOD Core Banking Development', desc: 'End of Day Core Banking Development (EOD-Q)', icon: '🌙' },
+      { id: 'svc_hw_request', title: 'Hardware Request', desc: 'Permintaan perangkat hardware', icon: '🖥️' },
+      { id: 'svc_hw_cabang', title: 'Instalasi Hardware/Software Cabang', desc: 'Instalasi Hardware/Software Client Kantor Cabang/Outlet', icon: '🔧' },
+      { id: 'svc_hw_pusat', title: 'Instalasi Hardware/Software Pusat', desc: 'Instalasi Hardware/Software Client Kantor Pusat', icon: '🏢' },
+      { id: 'svc_hw_server', title: 'Instalasi Hardware/Software Server', desc: 'Instalasi Hardware/Software Server Kantor Cabang/Outlet', icon: '💾' },
+      { id: 'svc_network_atm', title: 'Jaringan ATM & Channel', desc: 'Jaringan Komunikasi ATM & Channel', icon: '🏧' },
+      { id: 'svc_network_outlet', title: 'Jaringan Komunikasi Outlet', desc: 'Permintaan jaringan komunikasi outlet', icon: '📡' },
+      { id: 'svc_maintenance_data', title: 'Maintenance Data', desc: 'Pemeliharaan dan perbaikan data', icon: '🗄️' },
+      { id: 'svc_maintenance_app', title: 'Maintenance Fitur Aplikasi', desc: 'Maintenance Fitur Aplikasi Existing', icon: '⚙️' },
+      { id: 'svc_open_booth', title: 'Open Booth', desc: 'Permintaan pembukaan booth baru', icon: '🏪' },
+      { id: 'svc_mimix', title: 'Penambahan Object Replikasi MIMIX', desc: 'Penambahan object replikasi MIMIX', icon: '🔄' },
+      { id: 'svc_print_rekening', title: 'Pencetakan Rekening Koran', desc: 'Permintaan cetak rekening koran', icon: '🖨️' },
+      { id: 'svc_ip_server', title: 'Permintaan IP Server', desc: 'Permintaan alokasi IP Server', icon: '🌐' },
+      { id: 'svc_restore_db', title: 'Restore Database Non Core', desc: 'Restore Database non core/non as400', icon: '💿' },
+      { id: 'svc_routing', title: 'Routing and Switching', desc: 'Konfigurasi routing dan switching', icon: '🔀' },
+      { id: 'svc_server_nonvm', title: 'Server Non Virtual Machine', desc: 'Permintaan server non virtual machine', icon: '🖲️' },
+      { id: 'svc_server_vm', title: 'Server Virtual Machine AS400', desc: 'Server virtual machine as400', icon: '☁️' },
+    ];
+
+    window.SERVICE_CATALOG_LIST = SERVICE_CATALOG;
+
+    const API = {
+      getAllRequests: '/api/requests',
+      getRequestById: (id) => `/api/requests/${id}`,
+      getEmployees: '/api/employees',
+      updateServiceCatalog: '/api/update-servicecatalog',
+      manualAssignment: '/api/manual-assignment',
+      completeRequest: '/api/complete-request',
+      deleteRequest: '/api/delete-request'
+    };
+
+    let allRequests = [];
+    let filteredRequests = [];
+    let allEngineers = [];
+    let currentRequestId = null;
+    let selectedEngineerId = null;
+    let topCandidates = [];
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '-';
+      return new Date(dateStr).toLocaleString('id-ID', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    function getStatusBadge(status) {
+      const classes = {
+        'open': 'status-open',
+        'processing': 'status-processing',
+        'assigned': 'status-assigned',
+        'completed': 'status-completed',
+        'deleted': 'status-deleted'
+      };
+      return `<span class="status-badge ${classes[status] || 'status-open'}">${status || 'Unknown'}</span>`;
+    }
+
+    function getUrgencyBadge(urgency) {
+      const classes = {
+        'low': 'urgency-low',
+        'medium': 'urgency-medium',
+        'high': 'urgency-high'
+      };
+      return `<span class="urgency-badge ${classes[urgency] || 'urgency-medium'}">${urgency || 'Medium'}</span>`;
+    }
+
+    async function loadRequests() {
+      try {
+        const resp = await fetch(API.getAllRequests);
+        const data = await resp.json();
+        
+        if (data.status === 'success' || Array.isArray(data)) {
+          allRequests = Array.isArray(data) ? data : (data.requests || []);
+          filteredRequests = [...allRequests];
+          updateStats();
+          renderTable();
+        } else {
+          showError('Gagal memuat requests');
+        }
+      } catch (err) {
+        console.error('Error loading requests:', err);
+        showError('Error memuat requests: ' + err.message);
+      } finally {
+        document.getElementById('loadingSpinner').classList.remove('active');
+      }
+    }
+
+    async function loadEngineers() {
+      try {
+        const resp = await fetch(API.getEmployees);
+        const data = await resp.json();
+        allEngineers = Array.isArray(data) ? data : (data.data || []);
+        console.log(`✓ Loaded ${allEngineers.length} engineers`);
+      } catch (err) {
+        console.error('Error loading engineers:', err);
+      }
+    }
+
+    function updateStats() {
+      const stats = {
+        total: allRequests.length,
+        open: allRequests.filter(r => r.status === 'open').length,
+        assigned: allRequests.filter(r => r.status === 'assigned').length,
+        completed: allRequests.filter(r => r.status === 'completed').length
+      };
+
+      document.getElementById('statsGrid').innerHTML = `
+        <div class="stat-card">
+          <div class="stat-label">Total Requests</div>
+          <div class="stat-value">${stats.total}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Open</div>
+          <div class="stat-value" style="color: #3b82f6;">${stats.open}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Assigned</div>
+          <div class="stat-value" style="color: #10b981;">${stats.assigned}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Completed</div>
+          <div class="stat-value" style="color: #8b5cf6;">${stats.completed}</div>
+        </div>
+      `;
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('requestsTableBody');
+      
+      if (filteredRequests.length === 0) {
+        document.getElementById('requestsTableContainer').style.display = 'none';
+        document.getElementById('noDataContainer').style.display = 'block';
+        return;
+      }
+
+      document.getElementById('requestsTableContainer').style.display = 'block';
+      document.getElementById('noDataContainer').style.display = 'none';
+
+      tbody.innerHTML = filteredRequests.map(req => {
+        const isCompleted = req.status === 'completed';
+        const isDeleted = req.status === 'deleted';
+        
+        return `
+          <tr>
+            <td><strong>${req.id}</strong></td>
+            <td>${req.serviceTitle || req.title || '-'}</td>
+            <td>${req.requestor || req.name || '-'}</td>
+            <td>${getStatusBadge(req.status)}</td>
+            <td>${getUrgencyBadge(req.urgency)}</td>
+            <td>${req.assignedTo || '<em style="color: #999;">Unassigned</em>'}</td>
+            <td>
+              <button class="btn-action btn-view" onclick="viewDetail('${req.id}')">
+                👁️ Detail
+              </button>
+              <button class="btn-action btn-complete" onclick="completeRequest('${req.id}')" ${isCompleted || isDeleted ? 'disabled' : ''}>
+                ✅ Complete
+              </button>
+              <button class="btn-action btn-delete" onclick="deleteRequest('${req.id}')" ${isCompleted || isDeleted ? 'disabled' : ''}>
+                🗑️ Delete
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function viewDetail(requestId) {
+      try {
+        const resp = await fetch(API.getRequestById(requestId));
+        const data = await resp.json();
+        
+        if (data.status === 'success') {
+          const req = data.data;
+          currentRequestId = req.id;
+          topCandidates = req.candidates || req.aiAnalysis?.top_candidates || [];
+          showDetailModal(req);
+        } else {
+          showError('Gagal memuat detail request');
+        }
+      } catch (err) {
+        console.error('Error:', err);
+        showError('Error memuat detail: ' + err.message);
+      }
+    }
+
+    function showDetailModal(req) {
+      const modal = document.getElementById('detailModal');
+      const body = document.getElementById('modalBody');
+      const title = document.getElementById('modalTitle');
+
+      title.textContent = `Detail - ${req.id}`;
+
+      let aiAnalysisHtml = '';
+      if (req.aiAnalysis) {
+        const ai = req.aiAnalysis;
+        aiAnalysisHtml = `
+          <div class="detail-section">
+            <div class="detail-section-title">🤖 AI Analysis</div>
+            <div class="ai-analysis-box">
+              <div class="ai-metric">
+                <span class="ai-metric-label">Assignment Score:</span>
+                <span class="ai-metric-value">${(ai.assignmentScore * 100).toFixed(1)}%</span>
+              </div>
+              ${ai.cri ? `
+                <div class="ai-metric">
+                  <span class="ai-metric-label">Risk Level:</span>
+                  <span class="ai-metric-value">${ai.cri.risk_level || 'N/A'}</span>
+                </div>
+                <div class="ai-metric">
+                  <span class="ai-metric-label">Complexity Index:</span>
+                  <span class="ai-metric-value">${(ai.cri.cri_normalized * 100).toFixed(1)}%</span>
+                </div>
+              ` : ''}
+              ${ai.tsm ? `
+                <div class="ai-metric">
+                  <span class="ai-metric-label">Skill Match:</span>
+                  <span class="ai-metric-value">${(ai.tsm.tsm_score * 100).toFixed(1)}%</span>
+                </div>
+              ` : ''}
+              ${ai.reason ? `
+                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #bfdbfe;">
+                  <p style="margin: 0; color: #0c4a6e; font-size: 0.9em;">
+                    <strong>Reason:</strong> ${ai.reason}
+                  </p>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }
+
+      // Generate candidates HTML
+      let candidatesHtml = '';
+      if (topCandidates && topCandidates.length > 0) {
+        candidatesHtml = `
+          <div class="candidate-list">
+            ${topCandidates.map((cand, idx) => `
+              <div class="candidate-item" onclick="selectCandidate('${cand.engineer || cand.engineerId}')" data-engineer="${cand.engineer || cand.engineerId}">
+                <div class="candidate-name">${idx + 1}. ${cand.engineer || cand.engineerId}</div>
+                <div class="candidate-scores">
+                  <div class="candidate-score">
+                    <span>📊 TSM:</span>
+                    <strong>${((cand.tsm_score || 0) * 100).toFixed(1)}%</strong>
+                  </div>
+                  ${cand.skill_score ? `
+                    <div class="candidate-score">
+                      <span>🎯 Skill:</span>
+                      <strong>${(cand.skill_score * 100).toFixed(1)}%</strong>
+                    </div>
+                  ` : ''}
+                  ${cand.workload_capacity ? `
+                    <div class="candidate-score">
+                      <span>⚡ Capacity:</span>
+                      <strong>${(cand.workload_capacity * 100).toFixed(1)}%</strong>
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      body.innerHTML = `
+        <div class="detail-section">
+          <div class="detail-section-title">📋 Informasi Request</div>
+          <div class="detail-row">
+            <span class="detail-label">Request ID:</span>
+            <span class="detail-value"><strong>${req.id}</strong></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Status:</span>
+            <span class="detail-value">${getStatusBadge(req.status)}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Urgensi:</span>
+            <span class="detail-value">${getUrgencyBadge(req.urgency)}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Dibuat:</span>
+            <span class="detail-value">${formatDate(req.createdAt)}</span>
+          </div>
+          ${req.completedAt ? `
+            <div class="detail-row">
+              <span class="detail-label">Selesai:</span>
+              <span class="detail-value">${formatDate(req.completedAt)}</span>
+            </div>
+          ` : ''}
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">👤 Requestor</div>
+          <div class="detail-row">
+            <span class="detail-label">Nama:</span>
+            <span class="detail-value">${req.requestor || req.name || '-'}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">NIP:</span>
+            <span class="detail-value">${req.nip || '-'}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Cabang:</span>
+            <span class="detail-value">${req.branch || '-'}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Unit Kerja:</span>
+            <span class="detail-value">${req.unit || '-'}</span>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">🛠️ Service Catalog</div>
+          <div class="detail-row">
+            <span class="detail-label">Service Title:</span>
+            <span class="detail-value"><strong>${req.serviceTitle || req.title || '-'}</strong></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Service ID:</span>
+            <span class="detail-value">${req.serviceId || '-'}</span>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">📝 Deskripsi</div>
+          <div style="background: #f9fafb; padding: 12px; border-radius: 8px; border-left: 4px solid #667eea;">
+            <p style="margin: 0; color: #2d3748; line-height: 1.6;">${req.description || '-'}</p>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">👨‍💼 Assignment</div>
+          <div class="detail-row">
+            <span class="detail-label">Assigned To:</span>
+            <span class="detail-value">${req.assignedTo ? `<strong style="color: #667eea;">${req.assignedTo}</strong>` : '<em style="color: #999;">Unassigned</em>'}</span>
+          </div>
+        </div>
+
+        ${aiAnalysisHtml}
+
+        <div class="detail-section">
+          <div class="detail-section-title">✏️ Edit Assignment & Service</div>
+          <div class="edit-form">
+            <div id="editAlert"></div>
+            
+            <!-- Assignment Section -->
+            <div class="assignment-toggle">
+              <div class="toggle-label" onclick="toggleManualAssignment()">
+                <span>🔄 Change Assigned Engineer</span>
+                <div class="toggle-switch" id="assignmentToggle"></div>
+              </div>
+              <div class="manual-assignment-section" id="manualAssignmentSection">
+                <label style="margin-top: 12px; display: block;"><strong>Select New Engineer:</strong></label>
+                <p style="font-size: 0.9rem; color: #6b7280; margin-bottom: 12px;">
+                  ${topCandidates.length > 0 ? 'Top 5 AI-recommended candidates:' : 'No candidates available. Please select from all engineers.'}
+                </p>
+                ${candidatesHtml || '<p style="color: #ef4444;">No candidates available</p>'}
+              </div>
+            </div>
+
+            <!-- Service Catalog Section -->
+            <form id="editForm" onsubmit="saveChanges(event, '${req.id}')">
+              <div class="edit-form-group">
+                <label for="editServiceCatalog"><strong>🎯 Change Service Catalog</strong></label>
+                <select id="editServiceCatalog" class="form-select" onchange="updateServiceInfo()">
+                  <option value="">-- Keep Current Service --</option>
+                  ${SERVICE_CATALOG.map(svc => `
+                    <option value="${svc.id}" data-title="${svc.title}" data-desc="${svc.desc}" ${req.serviceId === svc.id ? 'selected' : ''}>
+                      ${svc.icon} ${svc.title}
+                    </option>
+                  `).join('')}
+                </select>
+              </div>
+
+              <div style="background: #f0f4ff; padding: 12px; border-radius: 8px; margin-top: 12px; margin-bottom: 12px; border-left: 4px solid #667eea;">
+                <small style="color: #2d3748; font-weight: 500;">
+                  ℹ️ Changing service catalog will update Service Title, ID, and Description automatically
+                </small>
+              </div>
+
+              <div class="edit-form-group">
+                <label for="editServiceTitle">Service Title (Preview)</label>
+                <input type="text" id="editServiceTitle" value="${req.serviceTitle || req.title || ''}" readonly>
+              </div>
+
+              <div class="edit-form-group">
+                <label for="editServiceId">Service ID (Preview)</label>
+                <input type="text" id="editServiceId" value="${req.serviceId || 'general'}" readonly>
+              </div>
+
+              <div class="edit-form-group">
+                <label for="editDescription">Service Description (Preview)</label>
+                <textarea id="editDescription" rows="3" readonly>${req.description || ''}</textarea>
+              </div>
+
+              <div class="edit-form-group" style="border-top: 2px solid #e5e7eb; padding-top: 16px; margin-top: 16px;">
+                <label for="editNotes"><strong>📝 Change Notes</strong> (Optional)</label>
+                <textarea id="editNotes" rows="2" placeholder="Explain reason for changes..."></textarea>
+              </div>
+
+              <div class="edit-form-actions">
+                <button type="submit" class="btn-save">💾 Save Changes</button>
+                <button type="button" class="btn-cancel" onclick="closeDetailModal()">✕ Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      `;
+
+      modal.classList.add('active');
+      
+      // Set initial selected engineer
+      if (req.assignedTo) {
+        selectedEngineerId = req.assignedTo;
+        const engineerEl = document.querySelector(`[data-engineer="${req.assignedTo}"]`);
+        if (engineerEl) engineerEl.classList.add('selected');
+      }
+    }
+
+    function toggleManualAssignment() {
+      const toggle = document.getElementById('assignmentToggle');
+      const section = document.getElementById('manualAssignmentSection');
+      
+      toggle.classList.toggle('active');
+      section.classList.toggle('active');
+    }
+
+    function selectCandidate(engineerId) {
+      // Remove previous selection
+      document.querySelectorAll('.candidate-item').forEach(el => {
+        el.classList.remove('selected');
+      });
+      
+      // Add selection to clicked item
+      const clickedEl = document.querySelector(`[data-engineer="${engineerId}"]`);
+      if (clickedEl) {
+        clickedEl.classList.add('selected');
+        selectedEngineerId = engineerId;
+      }
+    }
+
+    function updateServiceInfo() {
+      const select = document.getElementById('editServiceCatalog');
+      if (!select) return;
+      
+      const selectedOption = select.options[select.selectedIndex];
+      
+      if (selectedOption.value) {
+        const title = selectedOption.getAttribute('data-title');
+        const desc = selectedOption.getAttribute('data-desc');
+        const id = selectedOption.value;
+        
+        const titleEl = document.getElementById('editServiceTitle');
+        const idEl = document.getElementById('editServiceId');
+        const descEl = document.getElementById('editDescription');
+        
+        if (titleEl) titleEl.value = title;
+        if (idEl) idEl.value = id;
+        if (descEl) descEl.value = desc;
+      }
+    }
+
+    async function saveChanges(event, requestId) {
+      event.preventDefault();
+
+      const newServiceId = document.getElementById('editServiceCatalog').value;
+      const changeNotes = document.getElementById('editNotes').value.trim();
+      const manualSection = document.getElementById('manualAssignmentSection');
+      const isManualAssignmentActive = manualSection && manualSection.classList.contains('active');
+
+      // Show loading overlay
+      document.getElementById('aiProcessingOverlay').classList.add('active');
+
+      try {
+        // 1. Update Service Catalog if changed
+        if (newServiceId) {
+          const newServiceTitle = document.getElementById('editServiceTitle').value.trim();
+          const newDescription = document.getElementById('editDescription').value.trim();
+
+          const resp1 = await fetch(API.updateServiceCatalog, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              requestId,
+              serviceTitle: newServiceTitle,
+              serviceId: newServiceId,
+              description: newDescription,
+              changeNotes: changeNotes || 'Service catalog updated from admin dashboard'
+            })
+          });
+
+          const data1 = await resp1.json();
+          if (!resp1.ok || data1.status !== 'success') {
+            throw new Error(data1.message || 'Failed to update service catalog');
+          }
+        }
+
+        // 2. Update Engineer Assignment if changed
+        if (isManualAssignmentActive && selectedEngineerId) {
+          const resp2 = await fetch(API.manualAssignment, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              requestId,
+              engineerId: selectedEngineerId,
+              changeNotes: changeNotes || 'Engineer reassigned from admin dashboard'
+            })
+          });
+
+          const data2 = await resp2.json();
+          if (!resp2.ok || data2.status !== 'success') {
+            throw new Error(data2.message || 'Failed to reassign engineer');
+          }
+        }
+
+        // Success!
+        showEditAlert('✅ Changes saved successfully!', 'success');
+        setTimeout(() => {
+          document.getElementById('aiProcessingOverlay').classList.remove('active');
+          closeDetailModal();
+          loadRequests();
+        }, 1500);
+
+      } catch (err) {
+        console.error('Error:', err);
+        document.getElementById('aiProcessingOverlay').classList.remove('active');
+        showEditAlert('❌ ' + err.message, 'error');
+      }
+    }
+
+    function showEditAlert(msg, type) {
+      const alertDiv = document.getElementById('editAlert');
+      const className = type === 'success' ? 'alert-success' : 'alert-error';
+      alertDiv.innerHTML = `<div class="alert ${className}" style="margin-bottom: 0;">${msg}</div>`;
+      
+      if (type === 'success') {
+        setTimeout(() => {
+          alertDiv.innerHTML = '';
+        }, 3000);
+      }
+    }
+
+    function closeDetailModal() {
+      document.getElementById('detailModal').classList.remove('active');
+      selectedEngineerId = null;
+      topCandidates = [];
+    }
+
+    async function completeRequest(requestId) {
+      if (!confirm(`Mark request ${requestId} as completed?`)) return;
+      
+      const notes = prompt('Completion notes (optional):');
+      
+      try {
+        const resp = await fetch(API.completeRequest, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ requestId, notes })
+        });
+        
+        const data = await resp.json();
+        
+        if (resp.ok && data.status === 'success') {
+          alert('✅ Request marked as completed!');
+          loadRequests();
+        } else {
+          showError('Failed to complete request: ' + (data.message || ''));
+        }
+      } catch (err) {
+        console.error('Error:', err);
+        showError('Error: ' + err.message);
+      }
+    }
+
+    async function deleteRequest(requestId) {
+      const reason = prompt('Deletion reason:\n\n1. duplicate - Duplicate\n2. invalid - Invalid\n3. spam - Spam\n4. other - Other\n\nEnter number or text:');
+      
+      if (!reason) return;
+      
+      const notes = prompt('Additional notes (optional):');
+      
+      try {
+        const resp = await fetch(API.deleteRequest, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            requestId, 
+            reason: reason.includes('1') ? 'duplicate' : reason.includes('2') ? 'invalid' : reason.includes('3') ? 'spam' : 'other',
+            rejectionNotes: notes 
+          })
+        });
+        
+        const data = await resp.json();
+        
+        if (resp.ok && data.status === 'success') {
+          alert('✅ Request deleted successfully!');
+          loadRequests();
+        } else {
+          showError('Failed to delete request: ' + (data.message || ''));
+        }
+      } catch (err) {
+        console.error('Error:', err);
+        showError('Error: ' + err.message);
+      }
+    }
+
+    function applyFilters() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const statusFilter = document.getElementById('filterStatus').value;
+      const urgencyFilter = document.getElementById('filterUrgency').value;
+
+      filteredRequests = allRequests.filter(req => {
+        const matchSearch = !searchTerm || 
+                           req.id.toLowerCase().includes(searchTerm) ||
+                           (req.requestor || req.name || '').toLowerCase().includes(searchTerm) ||
+                           (req.serviceTitle || req.title || '').toLowerCase().includes(searchTerm);
+        
+        const matchStatus = !statusFilter || req.status === statusFilter;
+        const matchUrgency = !urgencyFilter || req.urgency === urgencyFilter;
+
+        return matchSearch && matchStatus && matchUrgency;
+      });
+
+      renderTable();
+    }
+
+    function showError(msg) {
+      alert('⚠️ ' + msg);
+    }
+
+    // Event Listeners
+    document.getElementById('filterBtn').addEventListener('click', applyFilters);
+    document.getElementById('searchInput').addEventListener('keyup', applyFilters);
+    document.getElementById('filterStatus').addEventListener('change', applyFilters);
+    document.getElementById('filterUrgency').addEventListener('change', applyFilters);
+    document.getElementById('closeModalBtn').addEventListener('click', closeDetailModal);
+
+    document.getElementById('detailModal').addEventListener('click', (e) => {
+      if (e.target.id === 'detailModal') {
+        closeDetailModal();
+      }
+    });
+
+    // Initialize
+    loadRequests();
+    loadEngineers();
+  </script>
+</body>
+</html>
